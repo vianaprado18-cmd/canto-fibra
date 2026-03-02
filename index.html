@@ -3,83 +3,191 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Canário Pro - Cloud</title>
+    <title>Canaril Pro - Acesso Beatriz</title>
     <style>
-        body { font-family: 'Segoe UI', Arial, sans-serif; margin: 0; background: #f0f2f5; color: #333; }
-        .container { width: 90%; max-width: 320px; margin: 80px auto; padding: 25px; background: white; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); text-align: center; }
-        input, select { width: 100%; padding: 12px; margin: 8px 0; border: 1px solid #ddd; border-radius: 6px; box-sizing: border-box; }
-        button { width: 100%; padding: 12px; margin-top: 10px; background: #2e8b57; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; }
-        .topbar { background: #2e8b57; color: white; padding: 10px 20px; display: flex; justify-content: space-between; align-items: center; }
-        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; padding: 20px; }
-        .card { background: white; padding: 20px; border-radius: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
-        .hidden { display: none; }
-        ul { list-style: none; padding: 0; }
-        .rank-item { display: flex; justify-content: space-between; align-items: center; background: #f9f9f9; padding: 10px; margin: 5px 0; border-radius: 5px; border-left: 5px solid #2e8b57; }
+        body { font-family: 'Segoe UI', sans-serif; background-color: #e9ecef; margin: 0; padding: 20px; color: #333; }
+        .container { max-width: 900px; margin: auto; background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.1); }
+        
+        /* Login Overlay */
+        #loginScreen { position: fixed; top:0; left:0; width: 100%; height:100%; background: #27ae60; display: flex; align-items: center; justify-content: center; z-index: 1000; }
+        .login-box { background: white; padding: 40px; border-radius: 10px; width: 300px; text-align: center; }
+        
+        /* Painel Principal (Escondido antes do login) */
+        #mainPanel { display: none; }
+
+        h2 { color: #27ae60; text-align: center; }
+        .tabs { display: flex; border-bottom: 2px solid #dee2e6; margin-bottom: 25px; justify-content: space-around; }
+        .tab-btn { padding: 12px; cursor: pointer; border: none; background: none; color: #666; font-weight: bold; }
+        .tab-btn.active { border-bottom: 4px solid #27ae60; color: #27ae60; }
+        
+        .content { display: none; }
+        .content.active { display: block; }
+
+        input, select, button { width: 100%; padding: 12px; border: 1px solid #ced4da; border-radius: 6px; margin-top: 10px; box-sizing: border-box; }
+        button { background-color: #27ae60; color: white; border: none; font-weight: bold; cursor: pointer; }
+        button:hover { background-color: #219150; }
+        .btn-danger { background-color: #e74c3c; padding: 5px; font-size: 11px; margin: 0; }
+
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th, td { border-bottom: 1px solid #eee; padding: 12px; text-align: left; }
     </style>
 </head>
 <body>
 
-    <div id="loginPage" class="container">
-        <h1>🐦 Canário Pro</h1>
-        <input type="text" id="username" placeholder="Usuário">
-        <input type="password" id="password" placeholder="Senha">
-        <button onclick="login()">Entrar</button>
-        <p id="message" style="color:red;"></p>
+<div id="loginScreen">
+    <div class="login-box">
+        <h3>Acesso Restrito</h3>
+        <input type="text" id="userLogin" placeholder="Usuário">
+        <input type="password" id="userPass" placeholder="Senha">
+        <button onclick="verificarLogin()">Entrar</button>
+        <p id="errorMsg" style="color: red; font-size: 12px; display: none;">Login ou senha incorretos!</p>
+    </div>
+</div>
+
+<div class="container" id="mainPanel">
+    <div style="text-align: right;"><small>Olá, <b>Beatriz</b>! | <a href="#" onclick="location.reload()">Sair</a></small></div>
+    <h2>🐤 Painel de Controle - Beatriz</h2>
+    
+    <div class="tabs">
+        <button class="tab-btn active" onclick="openTab('aves')">Aves</button>
+        <button class="tab-btn" onclick="openTab('treino')">Treine Livre</button>
     </div>
 
-    <div id="dashboardPage" class="hidden">
-        <div class="topbar">
-            <h2>🐦 Canário Pro</h2>
-            <button onclick="logout()" style="width: auto; background: #c0392b;">Sair</button>
-        </div>
-        <div class="grid">
-            <div class="card">
-                <h3>Cadastrar Canário</h3>
-                <input type="text" id="nomeAve" placeholder="Nome do Canário">
-                <input type="text" id="anilha" placeholder="Número da Anilha">
-                <button onclick="cadastrarCanario()">Salvar na Nuvem</button>
-            </div>
-            <div class="card">
-                <h3>Ranking Geral</h3>
-                <ul id="ranking">Carregando dados...</ul>
-            </div>
-        </div>
+    <div id="aves" class="content active">
+        <h3>Cadastrar Ave</h3>
+        <input type="text" id="aveNome" placeholder="Nome da Ave">
+        <input type="text" id="aveAnilha" placeholder="Número da Anilha">
+        <input type="date" id="aveNasc">
+        <button onclick="adicionarAve()">Salvar Ave</button>
+
+        <h3>Lista de Aves</h3>
+        <table id="tabelaAves">
+            <thead>
+                <tr><th>Nome</th><th>Anilha</th><th>Nascimento</th><th>Ação</th></tr>
+            </thead>
+            <tbody></tbody>
+        </table>
     </div>
 
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc, onSnapshot } 
-        from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+    <div id="treino" class="content">
+        <h3>Novo Treino</h3>
+        <select id="selectAve"></select>
+        <input type="text" id="treinoTempo" placeholder="Tempo de Canto (ex: 15 min)">
+        <input type="date" id="treinoData">
+        <button onclick="adicionarTreino()">Gravar Resultado</button>
 
-        const firebaseConfig = {
-            apiKey: "AIzaSyBs7oFgWFP0ASrwlwSyUED8iDTXhUM2P8I",
-            authDomain: "canto-fibra.firebaseapp.com",
-            projectId: "canto-fibra",
-            storageBucket: "canto-fibra.firebasestorage.app",
-            messagingSenderId: "524917978843",
-            appId: "1:524917978843:web:85f5d76d55062202f77efe"
-        };
+        <h3>Histórico de Treinos</h3>
+        <table id="tabelaTreinos">
+            <thead>
+                <tr><th>Ave</th><th>Tempo</th><th>Data</th></tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+</div>
 
-        const app = initializeApp(firebaseConfig);
-        const db = getFirestore(app);
+<script>
+    // CREDENCIAIS FIXAS
+    const LOGIN_CORRETO = "Beatriz";
+    const SENHA_CORRETA = "1234";
 
-        // --- LOGIN SIMPLES ---
-        window.login = function() {
-            const u = document.getElementById("username").value.toLowerCase();
-            const p = document.getElementById("password").value;
-            if(u === "beatriz" && p === "1234") {
-                localStorage.setItem("logged", "true");
-                checkAuth();
-            } else {
-                document.getElementById("message").innerText = "Acesso negado!";
-            }
+    function verificarLogin() {
+        const user = document.getElementById('userLogin').value;
+        const pass = document.getElementById('userPass').value;
+
+        if(user === LOGIN_CORRETO && pass === SENHA_CORRETA) {
+            document.getElementById('loginScreen').style.display = 'none';
+            document.getElementById('mainPanel').style.display = 'block';
+            carregarDadosIniciais();
+        } else {
+            document.getElementById('errorMsg').style.display = 'block';
         }
+    }
 
-        window.logout = function() {
-            localStorage.removeItem("logged");
-            location.reload();
+    // LÓGICA DO SISTEMA
+    let aves = JSON.parse(localStorage.getItem('aves_beatriz')) || [];
+    let treinos = JSON.parse(localStorage.getItem('treinos_beatriz')) || [];
+
+    function carregarDadosIniciais() {
+        atualizarTabelaAves();
+        atualizarSelectAves();
+        atualizarTabelaTreinos();
+    }
+
+    function openTab(tabId) {
+        document.querySelectorAll('.content').forEach(c => c.classList.remove('active'));
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        document.getElementById(tabId).classList.add('active');
+        event.currentTarget.classList.add('active');
+    }
+
+    function adicionarAve() {
+        const nome = document.getElementById('aveNome').value;
+        const anilha = document.getElementById('aveAnilha').value;
+        const nasc = document.getElementById('aveNasc').value;
+
+        if(!nome || !anilha) return alert("Preencha os dados!");
+
+        aves.push({ nome, anilha, nasc });
+        salvarNoStorage();
+        atualizarTabelaAves();
+        atualizarSelectAves();
+        
+        document.getElementById('aveNome').value = '';
+        document.getElementById('aveAnilha').value = '';
+    }
+
+    function deletarAve(index) {
+        if(confirm("Excluir esta ave?")) {
+            aves.splice(index, 1);
+            salvarNoStorage();
+            atualizarTabelaAves();
+            atualizarSelectAves();
         }
+    }
 
-        function checkAuth() {
-            if(localStorage.getItem("logged")) {
-                document.getElementById("
+    function adicionarTreino() {
+        const ave = document.getElementById('selectAve').value;
+        const tempo = document.getElementById('treinoTempo').value;
+        const data = document.getElementById('treinoData').value;
+
+        if(ave === "" || !tempo) return alert("Preencha o treino!");
+
+        treinos.push({ ave, tempo, data });
+        salvarNoStorage();
+        atualizarTabelaTreinos();
+        document.getElementById('treinoTempo').value = '';
+    }
+
+    function salvarNoStorage() {
+        localStorage.setItem('aves_beatriz', JSON.stringify(aves));
+        localStorage.setItem('treinos_beatriz', JSON.stringify(treinos));
+    }
+
+    function atualizarTabelaAves() {
+        const corpo = document.querySelector('#tabelaAves tbody');
+        corpo.innerHTML = aves.map((a, i) => `
+            <tr>
+                <td>${a.nome}</td>
+                <td>${a.anilha}</td>
+                <td>${a.nasc}</td>
+                <td><button class="btn-danger" onclick="deletarAve(${i})">X</button></td>
+            </tr>
+        `).join('');
+    }
+
+    function atualizarSelectAves() {
+        const select = document.getElementById('selectAve');
+        select.innerHTML = aves.map(a => <option value="${a.nome}">${a.nome}</option>).join('');
+    }
+
+    function atualizarTabelaTreinos() {
+        const corpo = document.querySelector('#tabelaTreinos tbody');
+        corpo.innerHTML = treinos.map(t => `
+            <tr><td>${t.ave}</td><td>${t.tempo}</td><td>${t.data}</td></tr>
+        `).reverse().join('');
+    }
+</script>
+
+</body>
+</html>
