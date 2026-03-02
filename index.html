@@ -3,19 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Canário Pro - Beatriz</title>
+    <title>Canário Pro - Cloud</title>
     <style>
-        /* CSS INTEGRADO */
         body { font-family: 'Segoe UI', Arial, sans-serif; margin: 0; background: #f0f2f5; color: #333; }
         .container { width: 90%; max-width: 320px; margin: 80px auto; padding: 25px; background: white; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); text-align: center; }
         input, select { width: 100%; padding: 12px; margin: 8px 0; border: 1px solid #ddd; border-radius: 6px; box-sizing: border-box; }
         button { width: 100%; padding: 12px; margin-top: 10px; background: #2e8b57; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; }
-        button:hover { background: #256f46; }
         .topbar { background: #2e8b57; color: white; padding: 10px 20px; display: flex; justify-content: space-between; align-items: center; }
         .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; padding: 20px; }
         .card { background: white; padding: 20px; border-radius: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
         .hidden { display: none; }
-        .error { color: #e74c3c; font-size: 14px; margin-top: 10px; }
         ul { list-style: none; padding: 0; }
         .rank-item { display: flex; justify-content: space-between; align-items: center; background: #f9f9f9; padding: 10px; margin: 5px 0; border-radius: 5px; border-left: 5px solid #2e8b57; }
     </style>
@@ -24,12 +21,10 @@
 
     <div id="loginPage" class="container">
         <h1>🐦 Canário Pro</h1>
-        <p>Bem-vinda, Beatriz!</p>
         <input type="text" id="username" placeholder="Usuário">
         <input type="password" id="password" placeholder="Senha">
         <button onclick="login()">Entrar</button>
-        <p id="message" class="error"></p>
-        <small style="color: #888;">Dica: beatriz / 1234</small>
+        <p id="message" style="color:red;"></p>
     </div>
 
     <div id="dashboardPage" class="hidden">
@@ -37,36 +32,54 @@
             <h2>🐦 Canário Pro</h2>
             <button onclick="logout()" style="width: auto; background: #c0392b;">Sair</button>
         </div>
-
         <div class="grid">
             <div class="card">
                 <h3>Cadastrar Canário</h3>
                 <input type="text" id="nomeAve" placeholder="Nome do Canário">
                 <input type="text" id="anilha" placeholder="Número da Anilha">
-                <button onclick="cadastrarCanario()">Cadastrar Ave</button>
+                <button onclick="cadastrarCanario()">Salvar na Nuvem</button>
             </div>
-
-            <div class="card">
-                <h3>Registrar Treino</h3>
-                <select id="selectTreino"></select>
-                <input type="number" id="notaTreino" placeholder="Nota (0-100)">
-                <button onclick="registrarTreino()">Salvar Treino</button>
-            </div>
-
-            <div class="card">
-                <h3>Registrar Torneio</h3>
-                <select id="selectTorneio"></select>
-                <input type="text" id="nomeTorneio" placeholder="Nome do Torneio">
-                <input type="number" id="notaTorneio" placeholder="Nota (0-100)">
-                <button onclick="registrarTorneio()">Salvar Torneio</button>
-            </div>
-
             <div class="card">
                 <h3>Ranking Geral</h3>
-                <ul id="ranking"></ul>
+                <ul id="ranking">Carregando dados...</ul>
             </div>
         </div>
     </div>
 
-    <script>
-        // JS
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc, onSnapshot } 
+        from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyBs7oFgWFP0ASrwlwSyUED8iDTXhUM2P8I",
+            authDomain: "canto-fibra.firebaseapp.com",
+            projectId: "canto-fibra",
+            storageBucket: "canto-fibra.firebasestorage.app",
+            messagingSenderId: "524917978843",
+            appId: "1:524917978843:web:85f5d76d55062202f77efe"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        // --- LOGIN SIMPLES ---
+        window.login = function() {
+            const u = document.getElementById("username").value.toLowerCase();
+            const p = document.getElementById("password").value;
+            if(u === "beatriz" && p === "1234") {
+                localStorage.setItem("logged", "true");
+                checkAuth();
+            } else {
+                document.getElementById("message").innerText = "Acesso negado!";
+            }
+        }
+
+        window.logout = function() {
+            localStorage.removeItem("logged");
+            location.reload();
+        }
+
+        function checkAuth() {
+            if(localStorage.getItem("logged")) {
+                document.getElementById("
