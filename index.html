@@ -1,297 +1,72 @@
-/canario-pro
- ├── index.html        (Login)
- ├── dashboard.html    (Painel principal)
- ├── style.css
- └── app.js
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-<meta charset="UTF-8">
-<title>Canário Pro - Login</title>
-<link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Canário Pro - Beatriz</title>
+    <style>
+        /* CSS INTEGRADO */
+        body { font-family: 'Segoe UI', Arial, sans-serif; margin: 0; background: #f0f2f5; color: #333; }
+        .container { width: 90%; max-width: 320px; margin: 80px auto; padding: 25px; background: white; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); text-align: center; }
+        input, select { width: 100%; padding: 12px; margin: 8px 0; border: 1px solid #ddd; border-radius: 6px; box-sizing: border-box; }
+        button { width: 100%; padding: 12px; margin-top: 10px; background: #2e8b57; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; }
+        button:hover { background: #256f46; }
+        .topbar { background: #2e8b57; color: white; padding: 10px 20px; display: flex; justify-content: space-between; align-items: center; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; padding: 20px; }
+        .card { background: white; padding: 20px; border-radius: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
+        .hidden { display: none; }
+        .error { color: #e74c3c; font-size: 14px; margin-top: 10px; }
+        ul { list-style: none; padding: 0; }
+        .rank-item { display: flex; justify-content: space-between; align-items: center; background: #f9f9f9; padding: 10px; margin: 5px 0; border-radius: 5px; border-left: 5px solid #2e8b57; }
+    </style>
 </head>
 <body>
 
-<div class="container">
-  <h1>🐦 Canário Pro</h1>
-  <h3>Login</h3>
+    <div id="loginPage" class="container">
+        <h1>🐦 Canário Pro</h1>
+        <p>Bem-vinda, Beatriz!</p>
+        <input type="text" id="username" placeholder="Usuário">
+        <input type="password" id="password" placeholder="Senha">
+        <button onclick="login()">Entrar</button>
+        <p id="message" class="error"></p>
+        <small style="color: #888;">Dica: beatriz / 1234</small>
+    </div>
 
-  <input type="text" id="username" placeholder="Usuário">
-  <input type="password" id="password" placeholder="Senha">
+    <div id="dashboardPage" class="hidden">
+        <div class="topbar">
+            <h2>🐦 Canário Pro</h2>
+            <button onclick="logout()" style="width: auto; background: #c0392b;">Sair</button>
+        </div>
 
-  <button onclick="login()">Entrar</button>
-  <button onclick="register()">Criar Conta</button>
+        <div class="grid">
+            <div class="card">
+                <h3>Cadastrar Canário</h3>
+                <input type="text" id="nomeAve" placeholder="Nome do Canário">
+                <input type="text" id="anilha" placeholder="Número da Anilha">
+                <button onclick="cadastrarCanario()">Cadastrar Ave</button>
+            </div>
 
-  <p id="message" class="error"></p>
-</div>
+            <div class="card">
+                <h3>Registrar Treino</h3>
+                <select id="selectTreino"></select>
+                <input type="number" id="notaTreino" placeholder="Nota (0-100)">
+                <button onclick="registrarTreino()">Salvar Treino</button>
+            </div>
 
-<script src="app.js"></script>
-</body>
-</html>
-<!DOCTYPE html>
-<html lang="pt-br">
-<head>
-<meta charset="UTF-8">
-<title>Dashboard - Canário Pro</title>
-<link rel="stylesheet" href="style.css">
-</head>
-<body onload="initDashboard()">
+            <div class="card">
+                <h3>Registrar Torneio</h3>
+                <select id="selectTorneio"></select>
+                <input type="text" id="nomeTorneio" placeholder="Nome do Torneio">
+                <input type="number" id="notaTorneio" placeholder="Nota (0-100)">
+                <button onclick="registrarTorneio()">Salvar Torneio</button>
+            </div>
 
-<div class="topbar">
-  <h2>🐦 Canário Pro</h2>
-  <button onclick="logout()">Sair</button>
-</div>
+            <div class="card">
+                <h3>Ranking Geral</h3>
+                <ul id="ranking"></ul>
+            </div>
+        </div>
+    </div>
 
-<div class="grid">
-
-  <div class="card">
-    <h3>Cadastrar Canário</h3>
-    <input type="text" id="nomeAve" placeholder="Nome do Canário">
-    <input type="text" id="anilha" placeholder="Número da Anilha">
-    <button onclick="cadastrarCanario()">Cadastrar</button>
-  </div>
-
-  <div class="card">
-    <h3>Registrar Treino</h3>
-    <select id="selectTreino"></select>
-    <input type="number" id="notaTreino" placeholder="Nota (0-100)">
-    <button onclick="registrarTreino()">Salvar</button>
-  </div>
-
-  <div class="card">
-    <h3>Registrar Torneio</h3>
-    <select id="selectTorneio"></select>
-    <input type="text" id="nomeTorneio" placeholder="Nome do Torneio">
-    <input type="number" id="notaTorneio" placeholder="Nota (0-100)">
-    <button onclick="registrarTorneio()">Salvar</button>
-  </div>
-
-  <div class="card">
-    <h3>Ranking Geral</h3>
-    <ul id="ranking"></ul>
-  </div>
-
-</div>
-
-<script src="app.js"></script>
-</body>
-</html>
-body {
-  font-family: Arial, sans-serif;
-  margin: 0;
-  background: #f4f6f9;
-}
-
-.container {
-  width: 300px;
-  margin: 100px auto;
-  padding: 25px;
-  background: white;
-  border-radius: 10px;
-  box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-  text-align: center;
-}
-
-input, select {
-  width: 100%;
-  padding: 8px;
-  margin: 8px 0;
-}
-
-button {
-  width: 100%;
-  padding: 8px;
-  margin-top: 5px;
-  background: #2e8b57;
-  color: white;
-  border: none;
-  cursor: pointer;
-}
-
-button:hover {
-  background: #256f46;
-}
-
-.error {
-  color: red;
-}
-
-.topbar {
-  background: #2e8b57;
-  color: white;
-  padding: 15px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 20px;
-  padding: 20px;
-}
-
-.card {
-  background: white;
-  padding: 20px;
-  border-radius: 8px;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-}
-// =======================
-// SISTEMA CANÁRIO PRO
-// =======================
-
-let users = JSON.parse(localStorage.getItem("users")) || [];
-let canarios = JSON.parse(localStorage.getItem("canarios")) || [];
-
-// ================= LOGIN =================
-
-function hash(password){
-  return btoa(password);
-}
-
-function register(){
-  const username = document.getElementById("username").value;
-  const password = document.getElementById("password").value;
-  const message = document.getElementById("message");
-
-  if(!username || !password){
-    message.innerText = "Preencha todos os campos!";
-    return;
-  }
-
-  if(users.find(u => u.username === username)){
-    message.innerText = "Usuário já existe!";
-    return;
-  }
-
-  users.push({
-    id: Date.now(),
-    username,
-    password: hash(password)
-  });
-
-  localStorage.setItem("users", JSON.stringify(users));
-  message.style.color = "green";
-  message.innerText = "Conta criada!";
-}
-
-function login(){
-  const username = document.getElementById("username").value;
-  const password = hash(document.getElementById("password").value);
-  const message = document.getElementById("message");
-
-  const user = users.find(u => u.username === username && u.password === password);
-
-  if(!user){
-    message.innerText = "Login inválido!";
-    return;
-  }
-
-  localStorage.setItem("loggedUser", JSON.stringify(user));
-  window.location.href = "dashboard.html";
-}
-
-function logout(){
-  localStorage.removeItem("loggedUser");
-  window.location.href = "index.html";
-}
-
-// ================= DASHBOARD =================
-
-function initDashboard(){
-  const logged = JSON.parse(localStorage.getItem("loggedUser"));
-  if(!logged){
-    window.location.href = "index.html";
-    return;
-  }
-
-  atualizarSelects();
-  atualizarRanking();
-}
-
-// ================= CANÁRIOS =================
-
-function salvarCanarios(){
-  localStorage.setItem("canarios", JSON.stringify(canarios));
-  atualizarSelects();
-  atualizarRanking();
-}
-
-function cadastrarCanario(){
-  const nome = document.getElementById("nomeAve").value;
-  const anilha = document.getElementById("anilha").value;
-
-  if(!nome || !anilha) return alert("Preencha os campos!");
-
-  canarios.push({
-    id: Date.now(),
-    nome,
-    anilha,
-    treinos: [],
-    torneios: []
-  });
-
-  salvarCanarios();
-}
-
-function registrarTreino(){
-  const id = document.getElementById("selectTreino").value;
-  const nota = Number(document.getElementById("notaTreino").value);
-
-  const ave = canarios.find(c => c.id == id);
-  ave.treinos.push({nota});
-
-  salvarCanarios();
-}
-
-function registrarTorneio(){
-  const id = document.getElementById("selectTorneio").value;
-  const nomeTorneio = document.getElementById("nomeTorneio").value;
-  const nota = Number(document.getElementById("notaTorneio").value);
-
-  const ave = canarios.find(c => c.id == id);
-  ave.torneios.push({nomeTorneio, nota});
-
-  salvarCanarios();
-}
-
-function atualizarSelects(){
-  const s1 = document.getElementById("selectTreino");
-  const s2 = document.getElementById("selectTorneio");
-
-  if(!s1 || !s2) return;
-
-  s1.innerHTML = "";
-  s2.innerHTML = "";
-
-  canarios.forEach(c=>{
-    s1.add(new Option(c.nome, c.id));
-    s2.add(new Option(c.nome, c.id));
-  });
-}
-
-function calcularMedia(ave){
-  const notas = [
-    ...ave.treinos.map(t=>t.nota),
-    ...ave.torneios.map(t=>t.nota)
-  ];
-  if(notas.length === 0) return 0;
-  return (notas.reduce((a,b)=>a+b,0)/notas.length).toFixed(2);
-}
-
-function atualizarRanking(){
-  const lista = document.getElementById("ranking");
-  if(!lista) return;
-
-  lista.innerHTML = "";
-
-  const ordenado = [...canarios].sort((a,b)=>calcularMedia(b)-calcularMedia(a));
-
-  ordenado.forEach(c=>{
-    const li = document.createElement("li");
-    li.innerText = ${c.nome} - Média: ${calcularMedia(c)};
-    lista.appendChild(li);
-  });
-}
+    <script>
+        // JS
